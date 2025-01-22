@@ -14,6 +14,7 @@ class ProductPageLocator():
     PRODUCT_ADD = (By.CSS_SELECTOR, "#add_to_basket_form")
     PRODUCT_NAME = (By.CSS_SELECTOR, ".product_main > h1")
     CART_BUTTON = (By.CSS_SELECTOR, ".btn-group > button.btn-default")
+    SUCCES_MESSAGE = (By.CSS_SELECTOR, ".alert-success:nth-child(1)")
 
 
 class CartProductLocator():

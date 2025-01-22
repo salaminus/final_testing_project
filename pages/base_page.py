@@ -1,7 +1,13 @@
 import math
 
+from selenium.common import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException  # в начале файла
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+from .locators import ProductPageLocator
+
 
 class BasePage():
     def __init__(self, browser, url, timeout=10):
@@ -34,3 +40,30 @@ class BasePage():
             alert.accept()
         except NoAlertPresentException:
             print("No second alert presented")
+
+    def is_not_element_present(self, how, what, timeout=4):
+        # Проверка, что эелемент на появляется на странице заданное время
+        try:
+            WebDriverWait(self.browser, timeout).until(EC.presence_of_element_located((how, what)))
+        except TimeoutException:
+            return True
+
+        return False
+
+    def should_not_be_success_message(self):
+        assert self.is_not_element_present(*ProductPageLocator.SUCCES_MESSAGE),\
+        "Success message is presented, but should not be"
+
+    def is_disappeared(self, how, what, timeout=4):
+        # Проверка, что элемент исчезает (until_not)
+        try:
+            WebDriverWait(self.browser, timeout, 1, TimeoutException).\
+                until_not(EC.presence_of_element_located((how, what)))
+        except TimeoutException:
+            return False
+
+        return True
+
+    def should_not_be_success_message_until_not(self):
+        assert self.is_disappeared(*ProductPageLocator.SUCCES_MESSAGE),\
+        "Success message is not presented"
